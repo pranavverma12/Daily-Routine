@@ -1,0 +1,35 @@
+{
+  "tasks": [
+    {
+      "name": "Wake up and exercise",
+      "description": "",
+      "startTime": "08:00",
+      "endTime": "09:00",
+      "icon": "gym",
+      "repeat": false,
+      "repeatDays": [],
+      "taskColor": "#fff"
+    },
+    {
+      "name": "Shower and get ready",
+      "description": "",
+      "startTime": "09:00",
+      "endTime": "09:30",
+      "icon": "shower",
+      "repeat": false,
+      "repeatDays": [],
+      "taskColor": "#fff"
+    },
+    {
+      "name": "breakfast",
+      "description": "",
+      "startTime": "09:30",
+      "endTime": "10:30",
+      "icon": "egg",
+      "repeat": false,
+      "repeatDays": [],
+      "taskColor": "#fff"
+    }
+  ]
+}
+  

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Routine Planner</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    
+</head>
+
+
+<body>
+    <div class="app">
+        <div class="header">
+            <h1>Daily Routine Planner</h1>
+        </div>
+        <div class="calendar-section glassmorph">
+            <div class="month-year">
+                <button id="prev-month">&lt;</button>
+                <span class="month">July</span>
+                <span class="year">2024</span>
+                <button id="next-month">&gt;</button>
+            </div>
+            <div class="days"></div>
+        </div>
+        <div class="tasks-section">
+            <div id="task-list"></div>
+        </div>
+        <button class="add-routine">
+            <i class="fas fa-plus"></i>
+        </button>
+
+        <!-- Add New Tasks Modal -->
+        <div id="routine-modal" class="modal">
+            <div class="modal-content" id="routine-modal-content">
+                <span class="close-button">&times;</span>
+                <h2 style="border-bottom: 2px solid white;">Add New Task</h2>
+                <form id="routine-form">
+                    <label for="start-time">Start Time:</label>
+                    <input type="time" id="start-time" name="start-time" required>
+
+                    <label for="end-time">End Time:</label>
+                    <input type="time" id="end-time" name="end-time" required>
+
+                    <label for="icon">Icon:</label>
+                    <input type="text" id="icon" name="icon" placeholder="Select emoji" required>
+
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required>
+
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" maxlength="100" required></textarea>
+
+                    <label for="task-color">Task Color:</label>
+                    <input type="color" id="task-color" name="task-color" required>
+
+                    <label for="repeat">Repeat:</label>
+                    <input type="checkbox" id="repeat" name="repeat">
+
+                    <div id="repeat-days-container" style="display: none;">
+                        <label>Repeat Days:</label>
+                        <div>
+                            <input type="checkbox" id="monday" name="repeat-days" value="Monday">
+                            <label for="monday">Mon</label>
+                            <input type="checkbox" id="tuesday" name="repeat-days" value="Tuesday">
+                            <label for="tuesday">Tue</label>
+                            <input type="checkbox" id="wednesday" name="repeat-days" value="Wednesday">
+                            <label for="wednesday">Wed</label>
+                            <input type="checkbox" id="thursday" name="repeat-days" value="Thursday">
+                            <label for="thursday">Thu</label>
+                            <input type="checkbox" id="friday" name="repeat-days" value="Friday">
+                            <label for="friday">Fri</label>
+                            <input type="checkbox" id="saturday" name="repeat-days" value="Saturday">
+                            <label for="saturday">Sat</label>
+                            <input type="checkbox" id="sunday" name="repeat-days" value="Sunday">
+                            <label for="sunday">Sun</label>
+                        </div>
+                    </div>
+
+                    <button type="submit">Add Task</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Show Tasks Offcanvas -->
+        <div class="offcanvas offcanvas-bottom" tabindex="-1" id="taskDetailsOffcanvas" aria-labelledby="taskDetailsOffcanvasLabel">
+            <div class="offcanvas-header" id ="update-offcanvas-header">
+                <h5 class="offcanvas-title" id="taskDetailsOffcanvasLabel">Task Details</h5>
+                <button type="button" data-bs-dismiss="offcanvas" aria-label="Close" id="update-offcanvas-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+            <div class="offcanvas-body">
+                <form id="UpdateForm">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="update-title" name="title" placeholder="Task Title" required>
+                        <label for="title">Title:</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="time" id="update-start-time" class="form-control" name="update-start-time" required>
+                        <label for="update-start-time">Start Time:</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="time" class="form-control" id="update-end-time" name="update-end-time">
+                        <label for="update-end-time">End Time</label>
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <textarea id="update-description" name="description" maxlength="100" class="form-control" placeholder="Your task description"></textarea>
+                        <label for="description">Description:</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="update-icon" name="icon" placeholder="Select emoji">
+                        <label for="icon">Icon</label>
+                    </div>
+
+                    <div class="row">
+                        <label for="update-task-color" id="update-task-color-label">Task Color:</label>
+                        <input type="color" id="update-task-color" name="update-task-color" required>
+                    </div>
+
+                    <div class="row">
+                        <label for="update-repeat" id="update-repeat-label">Repeat:</label>
+                        <input type="checkbox" id="update-repeat" name="update-repeat">
+                    </div>
+                    
+
+                    <div class="row">
+                        <label for="update-checked" id="update-checked-label">Completed:</label>
+                        <input type="checkbox" id="update-checked" name="update-checked" value="" disabled>
+                    </div>
+                    
+                    <div class="row">
+                        <button type="button" id="update-task" class="btn">Save</button>
+                        <button type="button" id="delete-task" class="btn" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <script src="script.js"></script>
+
+</body>
+
+</html>

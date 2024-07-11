@@ -1,0 +1,551 @@
+/* styles.css */
+:root {
+    --primary-background: rgba(255, 255, 255, 0.2);
+    --secondary-background: linear-gradient(135deg, #667eea, #764ba2, #ff758c);
+    --white: #ffffff;
+    --modal-backdrop-filter: blur(50px);
+    --select: pointer;
+}
+
+body {
+    /* margin: 0; */
+    font-family: Arial, sans-serif;
+    background: var(--secondary-background);
+    color: #fff !important;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh;*/
+}
+
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.month-year {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.calendar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.day {
+    padding: 5px;
+    border-radius: 50%;
+    position: relative;
+}
+
+.day.selected{
+    background-color: #40225d; /*#2d88ff*/
+}
+
+.day.currentday {
+    background-color: #d86993;
+    margin: 0 7px 0 7px;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: var(--white);
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 12px;
+}
+
+main {
+    margin-top: 20px;
+}
+
+.routine {
+    display: flex;
+    margin: 10px 0;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    position: relative;
+    border: 5px solid;
+    /* background: linear-gradient(145deg, #e2e8ec, #ffffff); */
+    box-shadow: 5px 5px 15px #D1D9E6, -5px -5px 15px #ffffff00;
+}
+
+.routine[data-bgcolor] {
+    background: none;
+}
+
+.time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    flex-grow: 1;
+    position: relative;
+}
+
+.icon {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.details {
+    flex-grow: 1;
+}
+
+.title {
+    font-size: 18px;
+    /* color: black; */
+}
+
+.description {
+    font-size: 13px;
+    color: var(--white)smoke;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    var(--white)-space: nowrap;
+}
+
+.repeat {
+    font-size: 12px;
+    color: #272222;
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    right: 10px;
+}
+
+.add-routine {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+}
+.gap {
+    height: 30px;
+    border-left: 2px dashed #888;
+    margin-left: 22%;
+}
+
+/*CUSTOM CSS*/
+.checkbox {
+    width: 15px;
+    height: 15px;
+}
+.content .icon{
+    background: wheat;
+    padding: 10px 10px 10px 10px;
+    border-radius: 50%;
+  }
+.day.selected, .day.currentday {
+    padding: 10px;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+.calendar-section {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.month-year {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.days {
+    display: flex;
+    justify-content: space-between;
+    overflow: overlay;
+}
+
+.day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    cursor: var(--select);
+    border-radius: 10px;
+    transition: background 0.3s;
+}
+
+.day:hover {
+    background: var(--primary-background);
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px 6px;
+    margin-top: 5px;
+    background: red;
+    border-radius: 10px;
+    font-size: 0.8em;
+}
+
+.tasks-section {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.routine {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--primary-background);
+}
+
+.routine .time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9em;
+}
+
+.routine .content {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.routine .content .icon {
+    margin-right: 10px;
+    font-size: 1.5em;
+}
+
+.routine .content .details {
+    display: flex;
+    flex-direction: column;
+    cursor: var(--select);
+}
+
+.routine .content .details .title {
+    font-weight: bold;
+}
+
+.routine .content .details .description {
+    font-size: 13px;
+}
+
+.routine .checkbox {
+    margin-left: 10px;
+}
+
+.routine .strikethrough {
+    text-decoration: line-through;
+}
+
+.add-routine {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary-background);
+    cursor: var(--select);
+    transition: background 0.3s;
+}
+
+.add-routine:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+
+/* / */
+.round {
+  position: relative;
+  bottom: 30px;
+}
+
+.round label {
+  /* background-color: #fff; *//
+  background: var(--primary-background);
+  border: 2px solid #ccc;
+  border-radius: 38%;
+  cursor: var(--select);
+  height: 20px;
+  right: 10px;
+  position: absolute;
+  width: 20px;
+}
+
+.round label:after {
+    border: 2px solid #fff;
+    border-top: none;
+    border-right: none;
+    content: "";
+    height: 5px;
+    left: 3px;
+    opacity: 0;
+    position: absolute;
+    top: 5px;
+    transform: rotate(-45deg);
+    width: 12px;
+}
+
+.round input[type="checkbox"] {
+  visibility: hidden;
+}
+
+.round input[type="checkbox"]:checked + label {
+  background-color: #66bb6a;
+  border-color: #66bb6a;
+}
+
+.round input[type="checkbox"]:checked + label:after {
+  opacity: 1;
+}
+
+/* Styles for the modal and the form */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.7); /* Black with opacity */
+    backdrop-filter: blur(10px);
+}
+
+.modal-content {
+    background: rgb(161 150 150 / 13%);
+    backdrop-filter: var(--modal-backdrop-filter);
+    border-radius: 10px;
+    padding: 20px;
+    width: 80%;
+    max-width: 500px;
+    margin: 5% auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.close-button {
+    float: right;
+    font-size: 1.5em;
+    cursor: var(--select);
+    position: absolute;
+    right: 18px !important;
+    top: 0px !important;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    /* margin-top: 10px; */
+    color: var(--white);
+}
+
+input[type="time"],
+input[type="text"],
+input[type="color"],
+textarea {
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #333;
+}
+
+#repeat-days-container div {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#repeat-days-container div label {
+    margin-right: 10px;
+}
+
+button[type="submit"] {
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: var(--secondary-background);
+    color: var(--white);
+}
+
+button[type="submit"]:hover, #update-task:hover, #delete-task:hover {
+    box-shadow: 4px 3px 8px 2px whitesmoke;
+    transform: translateY(-5px);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#next-month, #prev-month{
+    color: var(--white);
+    border-radius: 50%;
+    padding: 4px 10px 4px 10px;
+    font-size: medium;
+    border: none;
+    background: var(--primary-background);
+}
+
+.offcanvas.offcanvas-bottom {
+    right: 0;
+    left: 0;
+    height: var(--bs-offcanvas-height);
+    /* max-height: 100%; */
+    border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+    transform: translateY(100%);
+    height: fit-content !important;
+    width: 32%;
+    left: 35% !important;
+}
+
+#routine-modal-content{
+    margin-top: 1%;
+}
+
+#routine-modal-content, #taskDetailsOffcanvas{
+    background-color: var(--primary-background);
+    backdrop-filter: var(--modal-backdrop-filter);
+}
+
+.offcanvas-backdrop.show {
+    opacity: 80% !important;
+}
+
+#update-offcanvas-header{
+    color: var(--white);
+    border-bottom: 2px solid var(--white);
+    justify-content: center;
+}
+
+#update-offcanvas-close{
+    background: transparent;
+    border: none;
+    right: 17px;
+    position: absolute;
+    color: var(--white);
+}
+
+#update-task, #delete-task, #update-repeat-label, #update-checked-label, #update-repeat, #update-checked, #update-task-color-label, #update-task-color{
+    float: left;
+    width: 44%;
+    margin: 3% 3% 0 0;
+    color: var(--white);
+}
+
+#update-task, #delete-task{
+    margin: 3% 3% 0% 3%;
+    background: var(--secondary-background);
+    border: none;
+}
+
+#delete-task, #update-repeat, #update-checked, #update-task-color{
+    float: right;
+}
+
+.form-floating>.form-control{
+    padding: 1rem .75rem;
+    background: var(--primary-background);
+    border: none;
+    color: var(--white);
+}
+
+.form-floating>.form-control:not(:placeholder-shown)~label::after, .form-floating>.form-select~label::after{
+    background: none !important;
+    border: none !important;
+    color: var(--white) !important;
+}
+
+.form-floating>label{
+    font-weight: 700;
+}
+
+.form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label {
+    color: var(--white) ;
+}
+
+@media only screen {
+    body {
+        height: 100vh;
+    }
+}
+
+@media (max-width: 600px) {
+    .gap {
+        margin-left: 34%;
+    }
+    .offcanvas.offcanvas-bottom {
+        width: 98%;
+        left: 1% !important;
+    }
+}
+
+@media (max-width: 420px) {
+    .gap {
+        margin-left: 38%;
+    }
+}
+
+/* /Dark theme css from Port */
+
+/* for cards
+ border-color: rgb(255 0 0 / 7%);
+box-shadow: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
+background: linear-gradient(145deg, #1e2024, #23272b); */
