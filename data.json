@@ -1,35 +1,53 @@
 {
   "tasks": [
-    {
-      "name": "Wake up and exercise",
-      "description": "",
-      "startTime": "08:00",
-      "endTime": "09:00",
-      "icon": "gym",
-      "repeat": false,
-      "repeatDays": [],
-      "taskColor": "#fff"
-    },
-    {
-      "name": "Shower and get ready",
-      "description": "",
-      "startTime": "09:00",
-      "endTime": "09:30",
-      "icon": "shower",
-      "repeat": false,
-      "repeatDays": [],
-      "taskColor": "#fff"
-    },
-    {
-      "name": "breakfast",
-      "description": "",
-      "startTime": "09:30",
-      "endTime": "10:30",
-      "icon": "egg",
-      "repeat": false,
-      "repeatDays": [],
-      "taskColor": "#fff"
-    }
+  {
+    "startTime": "00:00",
+    "endTime": "08:30",
+    "icon": "fas fa-moon",
+    "title": "Sleep",
+    "description": "Getting a good night's sleep.",
+    "checked": false,
+    "repeat": false,
+    "repeatDays": [],
+    "taskColor": "rgba(0, 0, 255, 0.1)",
+    "createdDate": "11/7/2024"
+  },
+  {
+    "startTime": "09:00",
+    "endTime": "10:00",
+    "icon": "fas fa-utensils",
+    "title": "Breakfast",
+    "description": "Having a healthy breakfast.",
+    "checked": true,
+    "repeat": true,
+    "repeatDays": ["Monday", "Wednesday", "Friday"],
+    "taskColor": "rgba(255, 0, 0, 0.1)",
+    "createdDate": "9/7/2024"
+  },
+  {
+    "startTime": "10:30",
+    "endTime": "11:30",
+    "icon": "fas fa-laptop",
+    "title": "Work",
+    "description": "Focus on work tasks.",
+    "checked": false,
+    "repeat": true,
+    "repeatDays": ["Monday", "Wednesday", "Friday"],
+    "taskColor": "rgba(0, 255, 0, 0.1)",
+    "createdDate": "10/7/2024"
+  },
+  {
+    "startTime": "08:00",
+    "endTime": "09:00",
+    "icon": "📝",
+    "title": "Morning Exercise",
+    "description": "30 minutes of jogging followed by stretching exercises.",
+    "checked": false,
+    "repeat": true,
+    "repeatDays": ["Friday", "Thurday"],
+    "taskColor": "rgb(236 56 38 / 20%)",
+    "createdDate": "4/7/2024"
+  }
   ]
 }
   

@@ -80,6 +80,7 @@ main {
     background: rgba(255, 255, 255, 0.1);
     position: relative;
     border: 5px solid;
+    max-height: 90px;
     /* background: linear-gradient(145deg, #e2e8ec, #ffffff); */
     box-shadow: 5px 5px 15px #D1D9E6, -5px -5px 15px #ffffff00;
 }
@@ -123,7 +124,7 @@ main {
 .description {
     font-size: 13px;
     color: var(--white)smoke;
-    max-width: 200px;
+    max-width: 90%;
     overflow: hidden;
     text-overflow: ellipsis;
     var(--white)-space: nowrap;
@@ -131,6 +132,7 @@ main {
 
 .repeat {
     font-size: 12px;
+    max-width: 90%;
     color: #272222;
 }
 
@@ -483,7 +485,7 @@ button[type="submit"]:hover, #update-task:hover, #delete-task:hover {
     color: var(--white);
 }
 
-#update-task, #delete-task, #update-repeat-label, #update-checked-label, #update-repeat, #update-checked, #update-task-color-label, #update-task-color{
+#update-task, #delete-task, #update-repeat-label, #update-checked-label, #update-repeat, #update-checked, #update-task-color-label, #update-task-color, #new-task-color, #new-task-color-label, #new-repeat, #new-repeat-label{
     float: left;
     width: 44%;
     margin: 3% 3% 0 0;
@@ -496,7 +498,7 @@ button[type="submit"]:hover, #update-task:hover, #delete-task:hover {
     border: none;
 }
 
-#delete-task, #update-repeat, #update-checked, #update-task-color{
+#delete-task, #update-repeat, #update-checked, #update-task-color, #new-task-color, #new-repeat{
     float: right;
 }
 

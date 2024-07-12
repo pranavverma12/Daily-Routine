@@ -1,54 +1,5 @@
 // script.js
-const tasks = [
-    {
-        startTime: "00:00",
-        endTime: "08:30",
-        icon: "fas fa-moon",
-        title: "Sleep",
-        description: "Getting a good night's sleep.",
-        checked: false,
-        repeat: false,
-        repeatDays: [],
-        taskColor: "rgba(0, 0, 255, 0.1)",
-        createdDay: "Monday"
-    },
-    {
-        startTime: "09:00",
-        endTime: "10:00",
-        icon: "fas fa-utensils",
-        title: "Breakfast",
-        description: "Having a healthy breakfast.",
-        checked: true,
-        repeat: true,
-        repeatDays: ["Monday", "Wednesday", "Friday"],
-        taskColor: "rgba(255, 0, 0, 0.1)",
-        createdDay: "Monday"
-    },
-    {
-        startTime: "10:30",
-        endTime: "11:30",
-        icon: "fas fa-laptop",
-        title: "Work",
-        description: "Focus on work tasks.",
-        checked: false,
-        repeat: true,
-        repeatDays: ["Monday", "Wednesday", "Friday"],
-        taskColor: "rgba(0, 255, 0, 0.1)",
-        createdDay: "Wednesday"
-    },
-    {
-        startTime: "08:00", // HH:MM format
-        endTime: "09:00", // HH:MM format
-        icon: "📝", // Unicode emoji or URL to an image
-        title: "Morning Exercise",
-        description: "30 minutes of jogging followed by stretching exercises.",
-        checked: false, // Boolean to indicate if the task is completed
-        repeat: true, // Boolean to indicate if the task repeats
-        repeatDays: ["Friday", "Thurday"], // Array of days for repetition
-        taskColor: "rgb(236 56 38 / 20%)", // Hex color code
-        createdDay: "Tuesday" // YYYY-MM-DD format
-    }
-];
+let tasks = []
 
 let db = null; // Declare db variable globally
 
@@ -59,17 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('routine-modal');
     const closeButton = document.querySelector('.close-button');
     const routineForm = document.getElementById('routine-form');
-    const repeatCheckbox = document.getElementById('repeat');
-    const repeatDaysContainer = document.getElementById('repeat-days-container');
+    const repeatCheckbox = document.getElementById('new-repeat');
+    const repeatDaysContainer = document.getElementById('new-repeat-days-container');
 
     const today = new Date();
+    const today_local = today.toLocaleDateString('en-IN')
+    const today_long_day = today.toLocaleDateString('en-IN', { weekday: 'long' });
     let currentYear = today.getFullYear();
     let currentMonth = today.getMonth();
 
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     const load_emoji = () =>{
-        console.log("Loaded..")
+        console.log("Loaded..", tasks)
     }
     load_emoji()
 
@@ -77,6 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const [hours, minutes] = time.split(':').map(Number);
         return hours * 60 + minutes;
     };
+
+    fetch('data.json')
+    .then(response => response.json())
+    .then(data => 
+        tasks=data["tasks"]
+    )
+    .catch(error => console.error("Error fetching JSON data:", error));
 
     // const minutesToTime = (minutes) => {
     //     const hours = Math.floor(minutes / 60).toString().padStart(2, '0');
@@ -87,10 +47,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to initialize the database
     async function initDatabase() {
         try {
-            const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}` });
-            db = new SQL.Database();
+            const sqlPromise  = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}` });
+
+            const dataPromise = fetch("sqlite.db").then(res => res.arrayBuffer());
+            const [SQL, buf] = await Promise.all([sqlPromise, dataPromise])
+            db = new SQL.Database(new Uint8Array(buf));
+
+            // db = new SQL.Database();
             console.log("SQLite Database initialized.");
             createTasksTable(); // Ensure tasks table exists
+            console.log("init data", tasks)
             
             tasks.forEach(demo_task => {
                 insertTask(demo_task);
@@ -117,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 repeat INTEGER,
                 repeatDays TEXT,
                 taskColor TEXT,
-                createdDay TEXT
+                createdDate TEXT
             )
         `;
         db.exec(createTableQuery);
@@ -143,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 repeat: row[7],
                 repeatDays: JSON.parse(row[8]),
                 taskColor: row[9],
-                createdDay: row[10]
+                createdDate: row[10]
             })) : [];
             
             if (result.length > 0) {
@@ -169,10 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 repeat,
                 repeatDays,
                 taskColor,
-                createdDay
+                createdDate
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        const { startTime, endTime, icon, title, description, checked, repeat, repeatDays, taskColor, createdDay } = task;
+        const { startTime, endTime, icon, title, description, checked, repeat, repeatDays, taskColor, createdDate } = task;
         const repeatDaysStr = JSON.stringify(repeatDays);
 
         try{
@@ -186,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 repeat,
                 repeatDaysStr,
                 taskColor,
-                createdDay
+                createdDate
             ]);
             console.log("Task inserted.");
         }
@@ -208,10 +174,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 repeat = ?,
                 repeatDays = ?,
                 taskColor = ?,
-                createdDay = ?
+                createdDate = ?
             WHERE id = ?
         `;
-        const { id, startTime, endTime, icon, title, description, checked, repeat, repeatDays, taskColor, createdDay } = task;
+        const { id, startTime, endTime, icon, title, description, checked, repeat, repeatDays, taskColor, createdDate } = task;
         const repeatDaysStr = JSON.stringify(repeatDays);
 
         try{
@@ -225,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 repeat,
                 repeatDaysStr,
                 taskColor,
-                createdDay,
+                createdDate,
                 id
             ]);
             console.log("Task updated.");
@@ -247,24 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // function showtasks(){
-    //     console.log(event.target)
-    //     if (event.target.classList.contains('title')) {
-    //       const taskId = event.target.dataset.id;
-    //       db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
-    //         if (err) {
-    //           console.error(err.message);
-    //         } else {
-    //           document.getElementById('tasktitle').textContent = row.title;
-    //           document.getElementById('taskDescription').value = row.description;
-    //           document.getElementById('taskForm').dataset.id = taskId;
-    //           const offcanvas = new bootstrap.Offcanvas(document.getElementById('taskDetailsCanvas'));
-    //           offcanvas.show();
-    //         }
-    //       });
-    //     }
-    // }
-
     // Function to open task details in offcanvas
     const openTaskDetails = (task) => {
         const _update_repeat = document.getElementById('update-repeat');
@@ -275,6 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const _update_start_time = document.getElementById('update-start-time');
         const _update_task_color = document.getElementById('update-task-color');
         const _update_checked = document.getElementById('update-checked');
+        const _update_created_date = document.getElementById('update-created-date');
         const saveTaskButton = document.getElementById('update-task');
         const deleteTaskButton = document.getElementById('delete-task');
 
@@ -286,6 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
         _update_start_time.value = task.startTime
         _update_task_color.value = task.taskColor
         _update_checked.checked = task.checked
+        _update_created_date.value = task.createdDate
 
         // Show the offcanvas
         const taskDetailsOffcanvas = new bootstrap.Offcanvas(document.getElementById('taskDetailsOffcanvas'));
@@ -303,14 +253,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateTask(task);
             taskDetailsOffcanvas.hide();
-            renderTasks(new Date());
+            renderTasks([today_local,today_long_day]);
         });
 
         // Delete task button click event
         deleteTaskButton.addEventListener('click', () => {
             deleteTask(task.id);
             taskDetailsOffcanvas.hide();
-            renderTasks(new Date());
+            renderTasks([today_local,today_long_day]);
         });
     };
 
@@ -327,11 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         calendarDaysContainer.innerHTML = '';
 
-        for (let i = 1 - prevMonthDays; i <= daysInMonth + nextMonthDays; i++) {
+        for (let i = 1-prevMonthDays; i <= daysInMonth + nextMonthDays; i++) {
             const dayElement = document.createElement('div');
             const date = new Date(year, month, i);
-            const day = date.toLocaleDateString('en-US', { weekday: 'short' });
-            const long_day = date.toLocaleDateString('en-US', { weekday: 'long' });
+            const day = date.toLocaleDateString('en-IN', { weekday: 'short' });
+            const long_day = date.toLocaleDateString('en-IN', { weekday: 'long' });
+            const full_date = date.toLocaleDateString('en-IN')
             const dateNumber = date.getDate();
 
             dayElement.classList.add('day');
@@ -339,14 +290,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 dayElement.classList.add('disabled');
             }
 
-            dayElement.innerHTML = `<div class="date">${dateNumber}</div><div class="day-name" data-name="${long_day}">${day}</div>`;
+            dayElement.innerHTML = `<div class="date" data-name="${full_date}">${dateNumber}</div><div class="day-name" data-name="${long_day}">${day}</div>`;
 
             if (i > 0 && i <= daysInMonth) {
                 dayElement.addEventListener('click', () => {
                     document.querySelector('.day.selected')?.classList.remove('selected');
                     dayElement.classList.add('selected');
-                    updateBadges(date);
-                    renderTasks(date);
+                    updateBadges([full_date, long_day]);
+                    renderTasks([full_date, long_day]);
                 });
             }
 
@@ -354,21 +305,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Set today's date as selected
-        const today = new Date();
         if (today.getFullYear() === year && today.getMonth() === month) {
             const todayDate = today.getDate();
             const todayElement = Array.from(calendarDaysContainer.children).find(dayElement => {
                 return dayElement.querySelector('.date').textContent == todayDate;
             });
             if (todayElement) {
-                console.log("Checking the todayElement",todayElement)
                 todayElement.classList.add('currentday');
                 todayElement.classList.add('selected');
-                // await delay(5000);
                 setTimeout(function () {
-                    renderTasks(new Date());
-                    updateBadges(today);
-                }, 3000);
+                    renderTasks([today_local, today_long_day]);
+                    updateBadges([today_local, today_long_day]);
+                }, 2000);
             }
         }
 
@@ -402,24 +350,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    renderCalendar(currentYear, currentMonth);
+
     const renderTasks = (selectedDate) => {
         const tasks = fetchTasks();
         let selectedDayName = "";
-        console.log("Selected Date is:", selectedDate)
     
         if (tasks) {
             taskList.innerHTML = '';
-            if (selectedDate != null) {
-                selectedDayName = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+            if (selectedDate != "") {
+                selectedDayDate = selectedDate[0]
+                selectedDayName = selectedDate[1]
             } else {
                 selectedDate = document.querySelector('.day.currentday');
-                selectedDayName = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+                selectedDayDate = document.querySelector('.day.currentday .date').innerText
+                selectedDayName = document.querySelector('.day.currentday .datyname').dataset.name
             }
     
             const filteredTasks = tasks.filter(task => {
-                const taskCreatedDay = task.createdDay;
+                const taskCreatedDate = task.createdDate;
                 const taskRepeatDays = task.repeatDays;
-                return taskCreatedDay == selectedDayName || (task.repeat && taskRepeatDays.includes(selectedDayName));
+                return (taskCreatedDate == selectedDayDate || (task.repeat && taskRepeatDays.includes(selectedDayName)))
             });
     
             filteredTasks.sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
@@ -475,8 +426,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (task) {
                         task.checked = event.target.checked;
                         updateTask(task); // Update task in the database
-                        renderTasks(selectedDate);
-                        updateBadges(selectedDate);
+                        updateBadges([today_local, today_long_day]);
+                        renderTasks([today_local, today_long_day]);
                     }
                 });
             });
@@ -486,23 +437,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 title.addEventListener('click', (event) => {
                     const taskId = event.target.dataset.id;
                     const task = tasks.find(task => task.id == taskId);
-                    console.log(task)
                     openTaskDetails(task)
                 });
             });
         }
     };
    
+    // Update the badges on top of calendar dates
     const updateBadges = (selectedDate) => {
         document.querySelectorAll('.day .badge').forEach(badge => badge.remove());
 
         const selectedDay = document.querySelector('.day.selected');
         if (!selectedDay) return;
 
-        const selectedDayName = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+        let selectedDayDate = selectedDate[0]
+        let selectedDayName = selectedDate[1]
 
-        const incompleteTasksCount = tasks.filter(task => !task.checked && (task.createdday === selectedDayName || (task.repeat && task.repeatDays.includes(selectedDayName)))).length;
-        console.log("Incompleted tasks:", incompleteTasksCount, selectedDayName)
+        const incompleteTasksCount = tasks.filter(task => !task.checked && (task.createdDate === selectedDayDate || (task.repeat && task.repeatDays.includes(selectedDayName)))).length;
 
         let badge = selectedDay.querySelector('.badge');
         if (incompleteTasksCount >= 0) {
@@ -517,14 +468,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    renderCalendar(currentYear, currentMonth);
-
+    // Function to add the new task on routine
     document.querySelector('.add-routine').addEventListener('click', () => {
         modal.style.display = 'block';
+        let _today_datetime = today
+        let _today_date = _today_datetime.toISOString().toLocaleString().slice(0,10)
+        let _today_time = _today_datetime.toLocaleTimeString('en-in', { hour12: false })
+        console.log(_today_date, _today_time)
+        document.getElementById('new-created-date').value = _today_date
+        document.getElementById('new-created-date').min = _today_date
+        document.getElementById('new-start-time').value = _today_time
     });
 
     closeButton.addEventListener('click', () => {
         modal.style.display = 'none';
+        console.log(modal.form);
+        modal.getElementsByTagName("form")[0].reset();
     });
 
     window.addEventListener('click', (event) => {
@@ -544,23 +503,22 @@ document.addEventListener('DOMContentLoaded', () => {
     routineForm.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const startTime = document.getElementById('start-time').value;
-        const endTime = document.getElementById('end-time').value;
-        const icon = document.getElementById('icon').value;
-        const title = document.getElementById('title').value;
-        const description = document.getElementById('description').value;
-        const taskColor = document.getElementById('task-color').value;
-        const repeat = document.getElementById('repeat').checked;
+        const startTime = document.getElementById('new-start-time').value;
+        const endTime = document.getElementById('new-end-time').value;
+        const icon = document.getElementById('new-icon').value;
+        const title = document.getElementById('new-title').value;
+        const description = document.getElementById('new-description').value;
+        const taskColor = document.getElementById('new-task-color').value;
+        const repeat = document.getElementById('new-repeat').checked;
         const repeatDays = Array.from(document.querySelectorAll('input[name="repeat-days"]:checked')).map(input => input.value);
 
         let selectedDate = document.querySelector('.day.selected');
-        let createdDay = ""
+        let createdDate = ""
         if(selectedDate != null){
-            createdDay = selectedDate.querySelector('.day-name').textContent;
+            createdDate = selectedDate.querySelector('.day-name').textContent;
         }
         else{
-            selectedDate = document.querySelector('.day.currentday');
-            createdDay = selectedDate.querySelector('.day-name').textContent;
+            createdDate = today.toISOString().slice(0, 10);
         }
 
         const newTask = {
@@ -573,57 +531,14 @@ document.addEventListener('DOMContentLoaded', () => {
             repeat,
             repeatDays,
             taskColor,
-            createdDay: createdDay
+            createdDate: createdDate
         };
 
-        
         // tasks.push(newTask);
         insertTask(newTask)
-        modal.style.display = 'none';
-        document.getElementById("myForm").reset();
-        renderTasks(selectedDate);
+        modal.style.display = 'none';        
+        modal.getElementsByTagName("form")[0].reset()
+        renderTasks([today_local, today_long_day]);
     });
-
-    
-    
-    // document.getElementById('tasktitle').addEventListener('change', (event) => {
-    //     if (event.target.classList.contains('task-checkbox')) {
-    //         const taskId = event.target.dataset.id;
-    //         const checked = event.target.checked ? 1 : 0;
-    //         db.run("UPDATE tasks SET checked = ? WHERE id = ?", [checked, taskId], (err) => {
-    //         if (err) {
-    //             console.error(err.message);
-    //         }
-    //         });
-    //     }
-    // });
-    
-    // document.getElementById('saveTask').addEventListener('click', () => {
-    //     const taskId = document.getElementById('UpdateForm').dataset.id;
-    //     const description = document.getElementById('taskDescription').value;
-    //     db.run("UPDATE tasks SET description = ? WHERE id = ?", [description, taskId], (err) => {
-    //         if (err) {
-    //         console.error(err.message);
-    //         } else {
-    //         loadTasks();
-    //         const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('taskDetailsCanvas'));
-    //         offcanvas.hide();
-    //         }
-    //     });
-    // });
-
-    // document.getElementById('deleteTask').addEventListener('click', () => {
-    //     const taskId = document.getElementById('UpdateForm').dataset.id;
-    //     db.run("DELETE FROM tasks WHERE id = ?", [taskId], (err) => {
-    //         if (err) {
-    //         console.error(err.message);
-    //         } else {
-    //         loadTasks();
-    //         const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('taskDetailsCanvas'));
-    //         offcanvas.hide();
-    //         }
-    //     });
-    // });
-    
 });
     
